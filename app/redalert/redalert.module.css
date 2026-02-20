@@ -114,12 +114,24 @@
 .container{max-width:960px;margin:0 auto}
 .header{max-width:960px;margin:0 auto}
 .headerRow{display:flex;align-items:center;justify-content:space-between}
-.title{font-size:2rem;margin:0;font-weight:700;letter-spacing:-0.6px;color:var(--accent);font-family:var(--serif);text-shadow:0 3px 18px rgba(123,46,90,0.05)}
+.title{
+  font-size:2.3rem;
+  margin:0;
+  font-weight:800;
+  letter-spacing:-1px;
+  font-family:var(--serif);
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 .title::after{content:'';display:inline-block;width:12px;height:12px;margin-left:12px;border-radius:4px;background:linear-gradient(180deg,var(--accent),var(--accent-2));vertical-align:middle;animation:titlePulse 2s ease-in-out infinite}
 .hero{
-  margin-top:1rem;
-  padding:100px 0;
-  animation:heroFadeIn 0.7s cubic-bezier(.2,.9,.2,1) forwards;
+  margin-top:1.5rem;
+  padding:70px 0 40px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 .lead{margin:0 0 0.8rem;color:var(--muted);max-width:70ch;line-height:1.5;font-size:1rem;margin-bottom:1.2rem}
 .supportText{
@@ -153,14 +165,11 @@
 .questionnaire{
   background: var(--surface);
   border-radius:calc(var(--radius) + 2px);
-  box-shadow:var(--shadow);
-  padding:1.5rem;
-  margin:1.25rem auto;
-  border: 1px solid var(--card-border);
-  transition: background-color 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  position:relative;overflow:visible;
+  box-shadow:0 20px 60px rgba(46,30,42,0.08);
+  padding:2rem;
+  margin:2rem auto;
+  border: 1px solid rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
 }
 .questionnaire h2{margin-top:0}
 .intro{color:var(--muted);margin-bottom:0.75rem}
@@ -168,21 +177,65 @@
 /* Always single-column questions (stacked vertically) */
 .questions{display:grid;grid-template-columns:1fr;gap:1rem}
 .question{
-  border-radius:24px;
-  padding:1.15rem;
-  background: rgba(255,255,255,0.72);
-  box-shadow: 0 10px 30px rgba(46,30,42,0.06);
-  border: 1px solid rgba(255,255,255,0.6);
-  position:relative;
-  padding-left:1.1rem; /* space for accent bar */
+  position: relative;   /* VERY IMPORTANT */
+  border-radius: 26px;
+  /* reduce top padding and let the legend be positioned absolutely to avoid extra gap */
+  padding: 2.4rem 1.5rem 1.5rem 1.5rem;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 12px 35px rgba(46,30,42,0.07);
+  border: 1px solid rgba(255,255,255,0.8);
+  transition: transform 220ms ease, box-shadow 220ms ease;
 }
-.question legend{font-weight:600;margin-bottom:0.5rem}
+.question legend{
+  /* absolutely position legend so it visually overlaps the top edge without creating layout gap */
+  position: absolute;
+  top: 16px;
+  left: 28px;
+  display: inline-block;
+  padding: 0 12px;
+  font-size: 1.05rem;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 10px;
+  line-height: 1.1;
+  pointer-events: none;
+}
 .question label{display:flex;align-items:center;gap:0.8rem;flex-wrap:nowrap;width:100%;margin-bottom:0.6rem;color:var(--text);font-size:1rem}
 /* custom pastel radio buttons */
 .question input[type="radio"]{
-  -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-pink);background:linear-gradient(180deg,#fff,#fff);display:inline-block;position:relative;flex:0 0 auto;cursor:pointer;transition:box-shadow 180ms ease, transform 120ms ease, background 180ms ease}
-.question input[type="radio"]:hover{transform:translateY(-2px)}
-.question input[type="radio"]:checked{background:linear-gradient(90deg,var(--accent-pink),var(--accent-2));box-shadow:0 6px 18px rgba(176,118,169,0.18);border-color:transparent}
+  appearance:none;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:2px solid var(--accent-pink);
+  position:relative;
+  cursor:pointer;
+  transition:all 180ms ease;
+}
+
+.question input[type="radio"]::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:10px;
+  height:10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  transition:transform 150ms ease;
+}
+.questionnaire{
+  animation:fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+.question input[type="radio"]:checked::after{
+  transform:translate(-50%,-50%) scale(1);
+}
 .question label span{display:block}
 
 /* reveal animation for each card (staggered) */
@@ -204,18 +257,22 @@
 .question::before{
   content:'';
   position:absolute;
-  left:-6px;top:12px;bottom:12px;
-  width:8px;border-radius:8px;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(123,46,90,0.06)}
-
+  left:12px;      /* move inside instead of touching edge */
+  top:36px;       /* adjusted to match reduced padding */
+  bottom:36px;
+  width:6px;
+  border-radius:8px;
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));
+}
 /* slight alternating tint to separate cards */
 .questions .question:nth-child(odd){background: color-mix(in srgb, var(--surface) 96%, var(--subtle) 4%)}
 .questions .question:nth-child(even){background: var(--surface)}
 
 /* make the legend / question text a bit more prominent */
-.question legend{font-size:1.05rem;color:var(--text);margin-bottom:0.6rem}
+.question legend{font-size:1.05rem;color:var(--text);margin-bottom:0.9rem;margin-top:1rem;padding-top:0.4rem}
 
 /* reduce density of options and stack clearly */
-.question div{display:flex;flex-direction:column}
+.question > div{display:flex;flex-direction:column;margin-top:2rem}
 .question label{padding:8px 10px;border-radius:20px}
 .question label:hover{background: color-mix(in srgb, var(--accent-pink) 8%, white)}
 
@@ -225,8 +282,17 @@
 /* progress bar */
 .progressWrap{margin:10px 0 14px;display:flex;align-items:center;gap:12px}
 /* thin rounded pastel track with soft fill animation */
-.progressTrack{flex:1;height:10px;border-radius:999px;background:linear-gradient(90deg,#FDECF2 0%, #F4EEFF 100%);padding:2px;box-sizing:content-box;border:1px solid rgba(124,75,103,0.06)}
-.progressFill{height:100%;background:var(--progress-fill);border-radius:999px;transition:width 420ms cubic-bezier(.2,.9,.2,1);box-shadow:0 8px 22px rgba(176,118,169,0.12)}
+.progressTrack{
+  height:12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.6);
+  padding:2px;
+}
+.progressFill{
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  box-shadow:0 8px 30px rgba(190,126,183,0.25);
+}
 .progressLabel{display:none}
 
 .actions{display:flex;justify-content:flex-end;padding-top:0.5rem}
@@ -234,6 +300,12 @@
 .submit:hover{transform:translateY(-4px);box-shadow:0 22px 48px rgba(190,126,183,0.18)}
 
 .footer{text-align:center;color:var(--muted);padding:1rem 0}
+
+:global(.dark) .question{
+  background:#111a1a;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
 
 /* no two-column layout: questions remain stacked vertically */
 
