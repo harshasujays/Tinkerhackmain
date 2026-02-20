@@ -88,7 +88,7 @@ export default function RedAlertPage() {
     // We can pass answers as query params or via sessionStorage/localStorage for simplicity
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('redalert-answers', JSON.stringify(answers))
-      router.push('/result') // your RedAlertResult.tsx should be at pages/result.tsx
+      router.push('/redalert/result') // your RedAlertResult.tsx should be at pages/result.tsx
     }
   }
 
