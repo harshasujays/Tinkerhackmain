@@ -37,6 +37,7 @@ export default function RedAlertPage(){
     // show non-blocking success banner instead of alert
     setSubmitted(true)
     formRef.current?.reset()
+    setAnswers({})
     sectionRef.current?.scrollIntoView({behavior:'smooth'})
   }
 
@@ -49,6 +50,13 @@ export default function RedAlertPage(){
 
   // Pagination state: two pages of 6 questions each
   const [step, setStep] = useState(0) // 0 => first 6, 1 => second 6
+
+  // answers stored by question index (1-based)
+  const [answers, setAnswers] = useState<Record<number,string>>({})
+
+  function handleAnswer(qIndex: number, value: string){
+    setAnswers(prev => ({...prev, [qIndex]: value}))
+  }
 
   const questions: string[] = [
     'I feel my feelings are dismissed or minimized by my partner.',
@@ -92,25 +100,45 @@ export default function RedAlertPage(){
 
   return (
     <div className={styles.page}>
+      {/* decorative background SVGs are purely presentational */}
+      <div className={styles.bgDecor} aria-hidden></div>
       <header className={styles.header}>
         <div className={styles.headerRow}>
           <h1 className={styles.title}>RedAlert</h1>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
-            <span className={styles.modeLabel} aria-hidden>{dark ? 'Dark' : 'Light'}</span>
             <button
-              className={styles.iconBtn}
+              className={styles.themeToggle}
               onClick={()=>setDark(d=>!d)}
               aria-pressed={dark}
               aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={dark ? 'Light mode' : 'Dark mode'}
             >
-              {dark ? '☀️' : '🌙'}
-            </button>
-          </div>
+              <span className={styles.toggleTrack}>
+                  <span className={styles.toggleKnob} aria-hidden>{dark ? '🪵' : '🌸'}</span>
+              </span>
+            </button>            <span className={styles.modeLabel} aria-hidden>{dark ? 'Masculine' : 'Feminine'}</span>          </div>
         </div>
         <div className={styles.hero}>
           <p className={styles.lead}>A short assessment to help identify potential relationship red flags. This is not a diagnosis—just a quick checklist to raise awareness.</p>
+          <p className={styles.supportText}>You deserve clarity and emotional safety in every relationship.</p>
           <a href="#questionnaire" onClick={handleStart} className={styles.startBtn}>Start Assessment</a>
+        </div>
+        <div className={styles.reassurance} aria-hidden>
+          <span className={styles.badge}>
+            <span className={styles.iconWrap} aria-hidden>
+              <span className={styles.femIcon}>💗</span>
+              <span className={styles.masIcon}>🔒</span>
+            </span>
+            This tool is private and judgment-free.
+          </span>
+
+          <span className={styles.badge}>
+            <span className={styles.iconWrap} aria-hidden>
+              <span className={styles.femIcon}>🌸</span>
+              <span className={styles.masIcon}>🛡</span>
+            </span>
+            Your answers are not stored.
+          </span>
         </div>
       </header>
 
@@ -119,12 +147,25 @@ export default function RedAlertPage(){
           <section id="questionnaire" ref={sectionRef} className={styles.questionnaire}>
           <h2>Relationship Red Flags — Quick Assessment</h2>
           <p className={styles.intro}>For each statement below, choose the option that best matches your experience.</p>
+          <div className={styles.progressWrap} aria-hidden>
+            {/** compute actual progress based on answered questions */}
+            {(() => {
+              const total = questions.length
+              const answered = Object.keys(answers).filter(k=> answers[Number(k)]).length
+              const pct = Math.round((answered/total) * 100)
+              return (
+                <div className={styles.progressTrack}>
+                  <div className={styles.progressFill} style={{width: `${pct}%`}} />
+                </div>
+              )
+            })()}
+          </div>
           <div className={styles.stepDots} aria-hidden="false">
             {[0,1].map(i => (
               <button
                 key={i}
                 type="button"
-                onClick={()=>setStep(i)}
+                onClick={()=>{ setStep(i); setSubmitted(false) }}
                 className={i === step ? styles.dotActive : styles.dot}
                 aria-current={i === step}
                 aria-label={`Go to step ${i+1}`}
@@ -143,12 +184,18 @@ export default function RedAlertPage(){
               {questions.slice(step * 6, step * 6 + 6).map((q, idx)=>{
                 const qIndex = step * 6 + idx + 1
                 return (
-                  <fieldset className={styles.question} key={qIndex}>
+                  <fieldset className={styles.question} key={qIndex} style={{['--i' as any]: idx}}>
                     <legend>{qIndex}. {q}</legend>
                     <div>
                       {options.map(opt=> (
                         <label key={opt.value}>
-                          <input type="radio" name={`q${qIndex}`} value={opt.value} /> {opt.label}
+                          <input
+                            type="radio"
+                            name={`q${qIndex}`}
+                            value={opt.value}
+                            checked={answers[qIndex] === opt.value}
+                            onChange={()=>handleAnswer(qIndex, opt.value)}
+                          /> {opt.label}
                         </label>
                       ))}
                     </div>

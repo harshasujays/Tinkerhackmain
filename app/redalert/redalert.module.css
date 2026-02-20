@@ -1,93 +1,237 @@
 
 /* Make theme variables global so toggling a class on <html> affects them */
 :global(:root){
-  /* Theme: Soft Peach background + Deep Plum primary */
-  --bg: #FFF3EB; /* soft peach background */
-  --surface: #FFFFFF; /* card surface */
-  --muted: #6B5A65; /* muted neutral for secondary text */
-  --accent: #5B114A; /* deep plum primary */
-  --accent-2: #A85FA8; /* softer plum accent */
-  --text: #111018; /* deep charcoal for high contrast */
-  --subtle: #FFF7F4;
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(16,24,40,0.06);
-  --card-border: rgba(15,23,32,0.04);
+  /* Pastel wellness theme: blush pink -> soft lavender */
+  --bg: linear-gradient(180deg,#FFEFF2 0%, #F3E9FF 100%);
+  --surface: rgba(255,255,255,0.72); /* semi-transparent glass */
+  --muted: #7A6B73; /* soft muted plum */
+  --accent: #7B2E5A; /* soft plum / mauve primary */
+  --accent-2: #C08AC9; /* pastel lavender accent */
+  --accent-pink: #FFB6C1; /* pastel pink */
+  --text: #2B2730; /* soft dark text (not pure black) */
+  --subtle: rgba(255,255,255,0.45);
+  --radius: 22px;
+  --shadow: 0 12px 32px rgba(44,34,44,0.06);
+  --card-border: rgba(255,255,255,0.55);
   --glass: rgba(255,255,255,0.6);
+  --serif: 'Merriweather', Georgia, serif;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  /* overridable gradients for buttons, toggles and progress (dark mode can replace) */
+  --btn-gradient: linear-gradient(90deg,var(--accent-pink),var(--accent-2));
+  --toggle-bg: linear-gradient(90deg,#FFF4F7,#F6F0FF);
+  --progress-fill: linear-gradient(90deg,var(--accent-pink),var(--accent-2));
 }
 :global(:root.dark){
-  /* Dark variant with deep plum accents */
-  --bg: #0b0c10; /* deep neutral */
-  --surface: #0f1116; /* card surface */
-  --muted: #9a93a9;
-  --accent: #7A2B73; /* brighter plum on dark */
-  --accent-2: #B47AC6;
-  --text: #E7E6EA;
-  --subtle: rgba(255,255,255,0.02);
-  --radius: 14px;
-  --shadow: 0 12px 40px rgba(2,6,23,0.6);
+  /* Masculine (earthy & cute) matte palette */
+  --bg: linear-gradient(180deg,#071421 0%, #13282b 100%);
+  --surface: #0f1b1b; /* solid matte surface (no gloss) */
+  --muted: #9FB4B3;
+  --accent: #1E5A6B; /* deep teal */
+  --accent-2: #5DAAA7; /* muted aqua */
+  --accent-pink: #CFAA8A; /* warm tan accent for buttons */
+  --text: #F3F6F6;
+  --subtle: rgba(255,255,255,0.03);
+  --radius: 22px;
+  --shadow: 0 12px 30px rgba(2,6,23,0.6);
   --card-border: rgba(255,255,255,0.04);
-  --glass: rgba(255,255,255,0.04);
+  --glass: transparent; /* remove glossy glass */
+  /* matte overrides for UI elements */
+  --btn-gradient: linear-gradient(180deg,#194B4C 0%, #143736 100%);
+  --toggle-bg: linear-gradient(180deg,#0F2324 0%, #0E2A2B 100%);
+  --progress-fill: linear-gradient(90deg,#2E6B67, #1E5854);
+  --serif: 'Merriweather', Georgia, serif;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
 .page{
   background: var(--bg);
   color:var(--text);
   min-height:100vh;
-  padding:2rem 1rem;
-  transition: background-color 240ms ease, color 240ms ease;
+  padding:2.5rem 1.25rem;
+  transition: background 320ms ease, color 240ms ease;
+  font-family: var(--sans);
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+/* subtle depth layers (no new colors, just existing accents at very low opacity) */
+.page::before{
+  content:'';
+  position:fixed;left:-200px;top:-200px;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb,var(--accent) 12%, transparent), transparent 60%);
+  filter:blur(60px);pointer-events:none;z-index:-1;opacity:0.6;
+}
+.page::after{
+  content:'';
+  position:fixed;right:-180px;bottom:-180px;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb,var(--accent-2) 10%, transparent), transparent 65%);
+  filter:blur(55px);pointer-events:none;z-index:-1;opacity:0.5;
+}
+/* keyframe animations for entrance and pulse effects */
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes titlePulse{0%,100%{opacity:0.7}50%{opacity:1}}
+/* decorative blobs */
+.bgDecor{position:fixed;right:-80px;top:-120px;width:520px;height:520px;pointer-events:none;z-index:0;background:radial-gradient(circle at 35% 35%, color-mix(in srgb,var(--accent-pink) 28%, transparent), transparent 35%), radial-gradient(circle at 70% 70%, color-mix(in srgb,var(--accent-2) 20%, transparent), transparent 50%);filter:blur(52px);opacity:0.85}
+/* tiny soft shapes to make the UI feel alive (pale pink circle, lavender blob, soft glow) */
+.bgDecor::before{
+  content:'';position:fixed;left:18px;top:18px;width:140px;height:140px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 50% 45%, rgba(255,199,210,0.9) 0%, rgba(255,199,210,0.45) 30%, rgba(255,199,210,0.12) 55%, transparent 70%);
+  filter:blur(18px);opacity:0.95;mix-blend-mode:screen;
+}
+.bgDecor::after{
+  content:'';position:fixed;right:14px;bottom:20px;width:180px;height:150px;border-radius:40%;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 40% 50%, rgba(192,138,201,0.88) 0%, rgba(192,138,201,0.42) 28%, rgba(192,138,201,0.12) 58%, transparent 75%);
+  filter:blur(20px);opacity:0.9;mix-blend-mode:screen;
+}
+/* extra soft glow near the top center */
+.bgDecor .tinyGlow{content:'';position:fixed;left:50%;top:8px;transform:translateX(-50%);width:260px;height:80px;border-radius:40%;pointer-events:none;z-index:0;background:linear-gradient(90deg, rgba(255,235,242,0.45), rgba(241,236,255,0.45));filter:blur(28px);opacity:0.7}
+
+/* ensure main card sits above these background shapes */
+.questionnaire{z-index:1}
+.reassurance{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:12px}
+.reassurance .badge{display:inline-flex;align-items:center;gap:8px;color:var(--muted);background:rgba(255,255,255,0.6);padding:6px 10px;border-radius:999px;font-size:0.95rem;border:1px solid rgba(255,255,255,0.45);box-shadow:0 6px 18px rgba(46,30,42,0.04);transition:transform 200ms ease,box-shadow 200ms ease;cursor:pointer}
+.reassurance .badge:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(46,30,42,0.08)}
+.reassurance .badge .iconWrap{display:inline-flex;align-items:center;justify-content:center;width:20px}
+.reassurance .badge .femIcon{display:inline}
+.reassurance .badge .masIcon{display:none}
+.reassurance .badge span[aria-hidden]{font-size:14px;line-height:1}
+
+/* In masculine/dark mode, show readable icons and hide floral ones */
+:global(.dark) .reassurance .badge{background:rgba(0,0,0,0.4);color:var(--text);border:1px solid rgba(255,255,255,0.12)}
+:global(.dark) .reassurance .badge .femIcon{display:none}
+:global(.dark) .reassurance .badge .masIcon{display:inline}
+
+@media (max-width:560px){
+  .reassurance{flex-direction:column;gap:8px}
+}
+/* When masculine (dark) mode is active, remove floral decorative shapes */
+:global(.dark) .bgDecor::before,
+:global(.dark) .bgDecor::after,
+:global(.dark) .bgDecor .tinyGlow {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 .container{max-width:960px;margin:0 auto}
 .header{max-width:960px;margin:0 auto}
 .headerRow{display:flex;align-items:center;justify-content:space-between}
-.title{font-size:1.95rem;margin:0;font-weight:800;letter-spacing:-0.4px;color:var(--accent);text-shadow:0 2px 10px rgba(79,63,153,0.08)}
-.title::after{content:'';display:inline-block;width:10px;height:10px;margin-left:10px;border-radius:3px;background:var(--accent-2);vertical-align:middle}
-.hero{margin-top:1rem}
-.lead{margin:0 0 1rem;color:var(--muted);max-width:64ch;line-height:1.5}
-.startBtn{display:inline-block;padding:0.6rem 1rem;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 10px 30px rgba(91,17,74,0.12);transition:transform 160ms ease, box-shadow 160ms ease}
-.startBtn:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(91,17,74,0.16)}
+.title{font-size:2rem;margin:0;font-weight:700;letter-spacing:-0.6px;color:var(--accent);font-family:var(--serif);text-shadow:0 3px 18px rgba(123,46,90,0.05)}
+.title::after{content:'';display:inline-block;width:12px;height:12px;margin-left:12px;border-radius:4px;background:linear-gradient(180deg,var(--accent),var(--accent-2));vertical-align:middle;animation:titlePulse 2s ease-in-out infinite}
+.hero{
+  margin-top:1rem;
+  padding:100px 0;
+  animation:heroFadeIn 0.7s cubic-bezier(.2,.9,.2,1) forwards;
+}
+.lead{margin:0 0 0.8rem;color:var(--muted);max-width:70ch;line-height:1.5;font-size:1rem;margin-bottom:1.2rem}
+.supportText{
+  margin:1rem 0 1.5rem;
+  color:var(--muted);
+  font-size:0.95rem;
+  font-weight:400;
+  opacity:0.85;
+  max-width:70ch;
+}
+.startBtn{display:inline-block;padding:0.7rem 1.1rem;border-radius:50px;background:var(--btn-gradient);color:#3a2430;text-decoration:none;font-weight:700;box-shadow:0 8px 30px rgba(197,138,201,0.12);transition:transform 0.3s cubic-bezier(.2,.9,.2,1),box-shadow 0.3s ease,scale 0.3s ease;cursor:pointer}
+.startBtn:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(192,124,190,0.25);scale:1.02}
 .iconBtn{background:transparent;border:0;padding:0.4rem 0.6rem;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem}
 .iconBtn:hover{background:var(--glass)}
-.modeLabel{font-size:0.85rem;color:var(--muted);padding-right:0.5rem}
+.modeLabel{font-size:0.85rem;color:var(--muted);padding-left:0.5rem;font-weight:500}
+
+/* Pill theme toggle (cute, accessible) */
+.themeToggle{background:transparent;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center}
+.toggleTrack{display:inline-block;width:56px;height:30px;background:var(--toggle-bg);border-radius:999px;padding:3px;box-sizing:content-box;box-shadow:0 6px 18px rgba(40,24,40,0.06);border:1px solid rgba(124,75,103,0.06);transition:background 200ms ease}
+.toggleKnob{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:white;border-radius:50%;box-shadow:0 6px 18px rgba(46,30,42,0.08);transform:translateX(0);transition:transform 260ms cubic-bezier(.2,.9,.2,1),background 200ms ease,box-shadow 200ms ease;font-size:14px}
+.themeToggle[aria-pressed="true"] .toggleKnob{transform:translateX(26px);background:linear-gradient(90deg,var(--accent-pink),var(--accent-2));box-shadow:0 10px 28px rgba(176,118,169,0.14)}
+.themeToggle:focus{outline:3px solid color-mix(in srgb,var(--accent-pink) 18%, transparent);outline-offset:6px;border-radius:999px}
+
+/* smaller screens slightly reduce toggle size */
+@media (max-width:420px){
+  .toggleTrack{width:48px;height:26px;padding:2px}
+  .toggleKnob{width:20px;height:20px}
+  .themeToggle[aria-pressed="true"] .toggleKnob{transform:translateX(22px)}
+}
 
 .questionnaire{
   background: var(--surface);
-  border-radius:var(--radius);
+  border-radius:calc(var(--radius) + 2px);
   box-shadow:var(--shadow);
-  padding:1.25rem;
+  padding:1.5rem;
   margin:1.25rem auto;
-  border: 1px solid rgba(16,18,23,0.06);
+  border: 1px solid var(--card-border);
   transition: background-color 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position:relative;overflow:visible;
 }
 .questionnaire h2{margin-top:0}
 .intro{color:var(--muted);margin-bottom:0.75rem}
 
 /* Always single-column questions (stacked vertically) */
-.questions{display:grid;grid-template-columns:1fr;gap:0.9rem}
+.questions{display:grid;grid-template-columns:1fr;gap:1rem}
 .question{
-  border-radius:12px;
-  padding:0.9rem;
-  background: var(--surface);
-  box-shadow: 0 4px 18px rgba(2,6,23,0.04);
-  border: 1px solid var(--card-border);
+  border-radius:24px;
+  padding:1.15rem;
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 10px 30px rgba(46,30,42,0.06);
+  border: 1px solid rgba(255,255,255,0.6);
+  position:relative;
+  padding-left:1.1rem; /* space for accent bar */
 }
 .question legend{font-weight:600;margin-bottom:0.5rem}
-.question label{display:flex;align-items:center;gap:0.6rem;flex-wrap:nowrap;width:100%;margin-bottom:0.6rem;color:var(--text);font-size:0.98rem}
-.question input[type="radio"]{accent-color:var(--accent);width:1.05rem;height:1.05rem}
+.question label{display:flex;align-items:center;gap:0.8rem;flex-wrap:nowrap;width:100%;margin-bottom:0.6rem;color:var(--text);font-size:1rem}
+/* custom pastel radio buttons */
+.question input[type="radio"]{
+  -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--accent-pink);background:linear-gradient(180deg,#fff,#fff);display:inline-block;position:relative;flex:0 0 auto;cursor:pointer;transition:box-shadow 180ms ease, transform 120ms ease, background 180ms ease}
+.question input[type="radio"]:hover{transform:translateY(-2px)}
+.question input[type="radio"]:checked{background:linear-gradient(90deg,var(--accent-pink),var(--accent-2));box-shadow:0 6px 18px rgba(176,118,169,0.18);border-color:transparent}
 .question label span{display:block}
 
+/* reveal animation for each card (staggered) */
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(0.995)} to{opacity:1;transform:translateY(0) scale(1)}}
+.questions .question{opacity:0;transform-origin:top left}
+.questions .question{animation:cardIn 420ms cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+
 /* Make the question heading more prominent */
-.questionnaire h2{font-size:1.9rem;margin:0 0 8px;font-weight:800;letter-spacing:-0.4px;text-align:center;color:var(--text)}
-.questionnaire h2::after{content:'';display:block;height:5px;width:76px;margin:10px auto 0;border-radius:4px;background:var(--accent);opacity:0.98}
+.questionnaire h2{font-size:1.9rem;margin:0 0 10px;font-weight:700;letter-spacing:-0.6px;text-align:center;color:var(--text);font-family:var(--serif)}
+.questionnaire h2::after{content:'';display:block;height:6px;width:88px;margin:12px auto 0;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));opacity:0.95}
 
 /* Remove two-column breakpoint to keep everything vertical */
 .question label:hover{color:var(--text)}
 
 /* highlight left border when hovered to emphasize card */
-.question:hover{border-color: var(--accent);transform:translateY(-2px);transition:transform 160ms ease,border-color 160ms ease}
+.question:hover{border-color: color-mix(in srgb,var(--accent) 40%, transparent);transform:translateY(-4px);transition:transform 160ms ease,border-color 160ms ease}
+
+/* left accent bar on each question */
+.question::before{
+  content:'';
+  position:absolute;
+  left:-6px;top:12px;bottom:12px;
+  width:8px;border-radius:8px;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(123,46,90,0.06)}
+
+/* slight alternating tint to separate cards */
+.questions .question:nth-child(odd){background: color-mix(in srgb, var(--surface) 96%, var(--subtle) 4%)}
+.questions .question:nth-child(even){background: var(--surface)}
+
+/* make the legend / question text a bit more prominent */
+.question legend{font-size:1.05rem;color:var(--text);margin-bottom:0.6rem}
+
+/* reduce density of options and stack clearly */
+.question div{display:flex;flex-direction:column}
+.question label{padding:8px 10px;border-radius:20px}
+.question label:hover{background: color-mix(in srgb, var(--accent-pink) 8%, white)}
+
+/* In dark/masculine mode, darken label hover to make text readable */
+:global(.dark) .question label:hover{background: rgba(0,0,0,0.3)}
+
+/* progress bar */
+.progressWrap{margin:10px 0 14px;display:flex;align-items:center;gap:12px}
+/* thin rounded pastel track with soft fill animation */
+.progressTrack{flex:1;height:10px;border-radius:999px;background:linear-gradient(90deg,#FDECF2 0%, #F4EEFF 100%);padding:2px;box-sizing:content-box;border:1px solid rgba(124,75,103,0.06)}
+.progressFill{height:100%;background:var(--progress-fill);border-radius:999px;transition:width 420ms cubic-bezier(.2,.9,.2,1);box-shadow:0 8px 22px rgba(176,118,169,0.12)}
+.progressLabel{display:none}
 
 .actions{display:flex;justify-content:flex-end;padding-top:0.5rem}
-.submit{padding:0.7rem 1.1rem;border-radius:999px;border:0;background:var(--accent);color:white;font-weight:600;box-shadow:0 10px 30px rgba(79,63,153,0.14);transition:transform 140ms ease}
-.submit:hover{transform:translateY(-3px)}
+.submit{padding:0.75rem 1.2rem;border-radius:50px;border:0;background:var(--btn-gradient);color:var(--text);font-weight:700;box-shadow:0 10px 32px rgba(190,126,183,0.12);transition:transform 180ms ease,box-shadow 180ms ease}
+.submit:hover{transform:translateY(-4px);box-shadow:0 22px 48px rgba(190,126,183,0.18)}
 
 .footer{text-align:center;color:var(--muted);padding:1rem 0}
 
@@ -95,22 +239,25 @@
 
 /* Pager styles */
 .pager{display:flex;gap:0.5rem;align-items:center}
-.pager .prevBtn,.pager .nextBtn{padding:0.55rem 0.9rem;border-radius:10px;border:1px solid var(--card-border);background:transparent;color:var(--text);cursor:pointer}
-.pager .nextBtn{background:var(--accent);color:white;border:0;box-shadow:0 8px 20px rgba(79,63,153,0.12)}
-.pager .prevBtn:hover,.pager .nextBtn:hover{transform:translateY(-2px)}
+.pager .prevBtn,.pager .nextBtn{padding:0.6rem 0.95rem;border-radius:999px;border:1px solid rgba(255,255,255,0.6);background:transparent;color:var(--text);cursor:pointer;transition:transform 160ms ease,box-shadow 160ms ease}
+.pager .nextBtn{background:var(--btn-gradient);color:var(--text);border:0;box-shadow:0 10px 28px rgba(190,126,183,0.12)}
+.pager .prevBtn:hover,.pager .nextBtn:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(190,126,183,0.12)}
 
 /* Step dots (pagination indicator) */
 .stepDots{display:flex;gap:0.5rem;justify-content:center;margin:12px 0 18px}
-.dot{width:12px;height:12px;border-radius:50%;background:#FFECE0;border:1px solid rgba(15,23,32,0.04);cursor:pointer;transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease}
-.dotActive{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 6px 20px rgba(79,63,153,0.12);border:0;transform:scale(1.02);cursor:pointer}
+.dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(180deg,#FFF0F3,#F9F5FF);border:1px solid rgba(124,75,103,0.06);cursor:pointer;transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease}
+.dotActive{width:14px;height:14px;border-radius:50%;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 8px 26px rgba(176,118,169,0.12);border:0;transform:scale(1.02);cursor:pointer}
 
 /* Success banner */
 .successBanner{
   position:fixed;top:20px;right:20px;z-index:1200;
-  background:var(--accent);
-  color:white;padding:0.7rem 1rem;border-radius:12px;box-shadow:0 12px 40px rgba(91,17,74,0.12);
-  text-align:center;font-weight:700;display:inline-flex;align-items:center;gap:12px;min-width:220px;max-width:360px
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:white;padding:0.7rem 1rem;border-radius:14px;box-shadow:0 18px 48px rgba(190,126,183,0.12);
+  text-align:center;font-weight:700;display:inline-flex;align-items:center;gap:12px;min-width:220px;max-width:380px
 }
 .toastClose{background:transparent;border:0;color:rgba(255,255,255,0.95);font-size:18px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+
+/* subtle reassurance text injected after intro */
+.intro::after{content:"This tool is private and judgment-free.";display:block;margin-top:10px;color:var(--muted);font-size:0.95rem;opacity:0.95}
 
 
