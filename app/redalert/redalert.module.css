@@ -1,0 +1,116 @@
+
+/* Make theme variables global so toggling a class on <html> affects them */
+:global(:root){
+  /* Theme: Soft Peach background + Deep Plum primary */
+  --bg: #FFF3EB; /* soft peach background */
+  --surface: #FFFFFF; /* card surface */
+  --muted: #6B5A65; /* muted neutral for secondary text */
+  --accent: #5B114A; /* deep plum primary */
+  --accent-2: #A85FA8; /* softer plum accent */
+  --text: #111018; /* deep charcoal for high contrast */
+  --subtle: #FFF7F4;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(16,24,40,0.06);
+  --card-border: rgba(15,23,32,0.04);
+  --glass: rgba(255,255,255,0.6);
+}
+:global(:root.dark){
+  /* Dark variant with deep plum accents */
+  --bg: #0b0c10; /* deep neutral */
+  --surface: #0f1116; /* card surface */
+  --muted: #9a93a9;
+  --accent: #7A2B73; /* brighter plum on dark */
+  --accent-2: #B47AC6;
+  --text: #E7E6EA;
+  --subtle: rgba(255,255,255,0.02);
+  --radius: 14px;
+  --shadow: 0 12px 40px rgba(2,6,23,0.6);
+  --card-border: rgba(255,255,255,0.04);
+  --glass: rgba(255,255,255,0.04);
+}
+
+.page{
+  background: var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:2rem 1rem;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+.container{max-width:960px;margin:0 auto}
+.header{max-width:960px;margin:0 auto}
+.headerRow{display:flex;align-items:center;justify-content:space-between}
+.title{font-size:1.95rem;margin:0;font-weight:800;letter-spacing:-0.4px;color:var(--accent);text-shadow:0 2px 10px rgba(79,63,153,0.08)}
+.title::after{content:'';display:inline-block;width:10px;height:10px;margin-left:10px;border-radius:3px;background:var(--accent-2);vertical-align:middle}
+.hero{margin-top:1rem}
+.lead{margin:0 0 1rem;color:var(--muted);max-width:64ch;line-height:1.5}
+.startBtn{display:inline-block;padding:0.6rem 1rem;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 10px 30px rgba(91,17,74,0.12);transition:transform 160ms ease, box-shadow 160ms ease}
+.startBtn:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(91,17,74,0.16)}
+.iconBtn{background:transparent;border:0;padding:0.4rem 0.6rem;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem}
+.iconBtn:hover{background:var(--glass)}
+.modeLabel{font-size:0.85rem;color:var(--muted);padding-right:0.5rem}
+
+.questionnaire{
+  background: var(--surface);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:1.25rem;
+  margin:1.25rem auto;
+  border: 1px solid rgba(16,18,23,0.06);
+  transition: background-color 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.questionnaire h2{margin-top:0}
+.intro{color:var(--muted);margin-bottom:0.75rem}
+
+/* Always single-column questions (stacked vertically) */
+.questions{display:grid;grid-template-columns:1fr;gap:0.9rem}
+.question{
+  border-radius:12px;
+  padding:0.9rem;
+  background: var(--surface);
+  box-shadow: 0 4px 18px rgba(2,6,23,0.04);
+  border: 1px solid var(--card-border);
+}
+.question legend{font-weight:600;margin-bottom:0.5rem}
+.question label{display:flex;align-items:center;gap:0.6rem;flex-wrap:nowrap;width:100%;margin-bottom:0.6rem;color:var(--text);font-size:0.98rem}
+.question input[type="radio"]{accent-color:var(--accent);width:1.05rem;height:1.05rem}
+.question label span{display:block}
+
+/* Make the question heading more prominent */
+.questionnaire h2{font-size:1.9rem;margin:0 0 8px;font-weight:800;letter-spacing:-0.4px;text-align:center;color:var(--text)}
+.questionnaire h2::after{content:'';display:block;height:5px;width:76px;margin:10px auto 0;border-radius:4px;background:var(--accent);opacity:0.98}
+
+/* Remove two-column breakpoint to keep everything vertical */
+.question label:hover{color:var(--text)}
+
+/* highlight left border when hovered to emphasize card */
+.question:hover{border-color: var(--accent);transform:translateY(-2px);transition:transform 160ms ease,border-color 160ms ease}
+
+.actions{display:flex;justify-content:flex-end;padding-top:0.5rem}
+.submit{padding:0.7rem 1.1rem;border-radius:999px;border:0;background:var(--accent);color:white;font-weight:600;box-shadow:0 10px 30px rgba(79,63,153,0.14);transition:transform 140ms ease}
+.submit:hover{transform:translateY(-3px)}
+
+.footer{text-align:center;color:var(--muted);padding:1rem 0}
+
+/* no two-column layout: questions remain stacked vertically */
+
+/* Pager styles */
+.pager{display:flex;gap:0.5rem;align-items:center}
+.pager .prevBtn,.pager .nextBtn{padding:0.55rem 0.9rem;border-radius:10px;border:1px solid var(--card-border);background:transparent;color:var(--text);cursor:pointer}
+.pager .nextBtn{background:var(--accent);color:white;border:0;box-shadow:0 8px 20px rgba(79,63,153,0.12)}
+.pager .prevBtn:hover,.pager .nextBtn:hover{transform:translateY(-2px)}
+
+/* Step dots (pagination indicator) */
+.stepDots{display:flex;gap:0.5rem;justify-content:center;margin:12px 0 18px}
+.dot{width:12px;height:12px;border-radius:50%;background:#FFECE0;border:1px solid rgba(15,23,32,0.04);cursor:pointer;transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease}
+.dotActive{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 6px 20px rgba(79,63,153,0.12);border:0;transform:scale(1.02);cursor:pointer}
+
+/* Success banner */
+.successBanner{
+  position:fixed;top:20px;right:20px;z-index:1200;
+  background:var(--accent);
+  color:white;padding:0.7rem 1rem;border-radius:12px;box-shadow:0 12px 40px rgba(91,17,74,0.12);
+  text-align:center;font-weight:700;display:inline-flex;align-items:center;gap:12px;min-width:220px;max-width:360px
+}
+.toastClose{background:transparent;border:0;color:rgba(255,255,255,0.95);font-size:18px;line-height:1;cursor:pointer;padding:4px 6px;border-radius:6px}
+
+

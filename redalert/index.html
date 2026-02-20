@@ -1,0 +1,143 @@
+<!doctype html>
+<!--
+  RedAlert — single-page assessment
+  Simple, responsive static site (HTML/CSS/JS)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RedAlert</title>
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="color-scheme" content="light dark">
+</head>
+<body>
+  <!-- Site header -->
+  <header class="site-header">
+    <div class="container header-row">
+      <h1 class="site-title">RedAlert</h1>
+      <div class="header-controls">
+        <button id="darkToggle" class="icon-btn" aria-pressed="false">🌙</button>
+      </div>
+    </div>
+    <div class="container hero">
+      <p class="lead">A short assessment to help identify potential relationship red flags. This is not a diagnosis—just a quick checklist to raise awareness.</p>
+      <a href="#questionnaire" id="startBtn" class="btn start-btn">Start Assessment</a>
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- Questionnaire section -->
+    <section id="questionnaire" class="questionnaire">
+      <h2>Relationship Red Flags — Quick Assessment</h2>
+      <p class="intro">For each statement below, choose the option that best matches your experience.</p>
+
+      <form id="assessmentForm">
+        <div class="questions">
+          <!-- Each question is in a fieldset for semantics and accessibility -->
+          <fieldset class="question">
+            <legend>1. My partner often dismisses my feelings.</legend>
+            <label><input type="radio" name="q1" value="no"> No</label>
+            <label><input type="radio" name="q1" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q1" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>2. They try to control who I spend time with.</legend>
+            <label><input type="radio" name="q2" value="no"> No</label>
+            <label><input type="radio" name="q2" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q2" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>3. I feel criticized more than supported.</legend>
+            <label><input type="radio" name="q3" value="no"> No</label>
+            <label><input type="radio" name="q3" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q3" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>4. They often make decisions for me without asking.</legend>
+            <label><input type="radio" name="q4" value="no"> No</label>
+            <label><input type="radio" name="q4" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q4" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>5. There is frequent yelling or hostility.</legend>
+            <label><input type="radio" name="q5" value="no"> No</label>
+            <label><input type="radio" name="q5" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q5" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>6. They check my phone or invade my privacy.</legend>
+            <label><input type="radio" name="q6" value="no"> No</label>
+            <label><input type="radio" name="q6" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q6" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>7. My boundaries are ignored or minimized.</legend>
+            <label><input type="radio" name="q7" value="no"> No</label>
+            <label><input type="radio" name="q7" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q7" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>8. They use guilt or manipulation to get their way.</legend>
+            <label><input type="radio" name="q8" value="no"> No</label>
+            <label><input type="radio" name="q8" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q8" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>9. I feel isolated from friends or family because of them.</legend>
+            <label><input type="radio" name="q9" value="no"> No</label>
+            <label><input type="radio" name="q9" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q9" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>10. They deny or minimize harmful actions when confronted.</legend>
+            <label><input type="radio" name="q10" value="no"> No</label>
+            <label><input type="radio" name="q10" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q10" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>11. They pressure me into sex or intimacy I don't want.</legend>
+            <label><input type="radio" name="q11" value="no"> No</label>
+            <label><input type="radio" name="q11" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q11" value="yes"> Yes</label>
+          </fieldset>
+
+          <fieldset class="question">
+            <legend>12. I feel anxious or on-edge before interactions with them.</legend>
+            <label><input type="radio" name="q12" value="no"> No</label>
+            <label><input type="radio" name="q12" value="sometimes"> Sometimes</label>
+            <label><input type="radio" name="q12" value="yes"> Yes</label>
+          </fieldset>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn submit-btn">Submit Assessment</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>RedAlert — awareness tool. If you are in immediate danger, contact local emergency services.</small>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
