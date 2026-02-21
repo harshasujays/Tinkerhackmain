@@ -143,8 +143,11 @@ function triggerAura() {
 
   setTimeout(() => {
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem('redalert-answers', JSON.stringify(answers))
-      router.push('/result')
+      sessionStorage.setItem(
+        'redalert-answers',
+        JSON.stringify(answers)
+      )
+      router.push('/redalert/result')
     }
   }, 600)
 }
