@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/redalert/main.jpeg" alt="Project Banner" width="100%">
+  <img src="main.jpeg" alt="Project Banner" width="100%">
 </p>
 
 # [RedAlert] 🎯
