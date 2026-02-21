@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/redalert/main.jpeg" alt="Project Banner" width="100%">
+  <img src="main.jpeg" alt="Project Banner" width="100%">
 </p>
 
 # [RedAlert] 🎯
@@ -154,5 +154,6 @@ This project is licensed under the [LICENSE_NAME] License - see the [LICENSE](LI
 - GPL v3 (Copyleft, requires derivative works to be open source)
 
 ---
+
 
 Made with ❤️ at TinkerHub
