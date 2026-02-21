@@ -7,11 +7,74 @@ export default function RedAlertPage() {
   const router = useRouter()
   const formRef = useRef<HTMLFormElement | null>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
+  const pageEffectRef = useRef<HTMLDivElement | null>(null)
+
+function triggerPageConfetti() {
+  const container = pageEffectRef.current
+  if (!container) {
+    console.log("No container found")
+    return
+  }
+
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement("div")
+    piece.className = styles.pageConfetti
+
+    piece.style.left = `${Math.random() * 100}vw`
+    piece.style.top = `${Math.random() * 100}vh`
+    piece.style.background = `hsl(${Math.random() * 40 + 300},70%,75%)`
+    piece.style.width = "8px"
+    piece.style.height = "12px"
+
+    container.appendChild(piece)
+
+    setTimeout(() => {
+      piece.remove()
+    }, 2000)
+  }
+}
+function triggerPageAura() {
+  const container = pageEffectRef.current
+  if (!container) return
+
+  const aura = document.createElement('div')
+  aura.className = styles.pageAura
+  container.appendChild(aura)
+
+  setTimeout(() => aura.remove(), 900)
+}
+  const effectRef = useRef<HTMLDivElement | null>(null)
+
+function triggerConfetti() {
+  const container = effectRef.current
+  if (!container) return
+
+  for (let i = 0; i < 12; i++) {
+    const piece = document.createElement('div')
+    piece.className = styles.confettiPiece
+    piece.style.left = `${Math.random() * 50}px`
+    piece.style.background = `hsl(${Math.random() * 40 + 300},70%,75%)`
+    container.appendChild(piece)
+
+    setTimeout(() => piece.remove(), 900)
+  }
+}
+
+function triggerAura() {
+  const container = effectRef.current
+  if (!container) return
+
+  const aura = document.createElement('div')
+  aura.className = styles.aura
+  container.appendChild(aura)
+
+  setTimeout(() => aura.remove(), 600)
+}
   const [dark, setDark] = useState(false)
   const [showQuestions, setShowQuestions] = useState(false)
 
   // Pagination state: two pages of 6 questions each
-  const [step, setStep] = useState(0) // 0 => first 6, 1 => second 6
+  const [currentIndex, setCurrentIndex] = useState(0) // 0 => first 6, 1 => second 6
 
   // answers stored by question index (1-based)
   const [answers, setAnswers] = useState<Record<number, string>>({})
@@ -29,9 +92,13 @@ export default function RedAlertPage() {
   }, [dark])
 
   function handleStart(e: React.MouseEvent) {
-    e.preventDefault()
-    setShowQuestions(true)
-  }
+  e.preventDefault()
+
+  if (dark) triggerPageAura()
+  else triggerPageConfetti()
+
+  setShowQuestions(true)
+}
 
   // scroll to questions when revealed
   useEffect(() => {
@@ -67,58 +134,87 @@ export default function RedAlertPage() {
     { label: 'Strongly disagree', value: 'strongly_disagree' }
   ]
 
-  function nextPage(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    e.stopPropagation()
-    if (step < 1) setStep(s => s + 1)
-    setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
-  }
 
-  function prevPage(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    e.stopPropagation()
-    if (step > 0) setStep(s => s - 1)
-    setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
-  }
+ function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  if (dark) triggerPageAura()
+  else triggerPageConfetti()
 
-    // Navigate to result page with answers
-    // We can pass answers as query params or via sessionStorage/localStorage for simplicity
+  setTimeout(() => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('redalert-answers', JSON.stringify(answers))
-      router.push('/result') // your RedAlertResult.tsx should be at pages/result.tsx
+      router.push('/result')
     }
-  }
+  }, 600)
+}
+function triggerModeAura(isDark: boolean) {
+  const container = pageEffectRef.current
+  if (!container) return
 
+  const aura = document.createElement("div")
+  aura.className = isDark
+    ? styles.masculineModeAura
+    : styles.feminineModeAura
+
+  container.appendChild(aura)
+
+  setTimeout(() => aura.remove(), 700)
+}
+const q = questions[currentIndex]
+const qIndex = currentIndex + 1
   return (
     <div className={styles.page}>
       <div className={styles.bgDecor} aria-hidden></div>
+      <div ref={pageEffectRef} className={styles.pageEffectLayer}></div>
       <header className={styles.header}>
         <div className={styles.headerRow}>
           <h1 className={styles.title}>RedAlert</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              className={styles.themeToggle}
-              onClick={() => setDark(d => !d)}
-              aria-pressed={dark}
-              aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={dark ? 'Light mode' : 'Dark mode'}
-            >
-              <span className={styles.toggleTrack}>
-                <span className={styles.toggleKnob} aria-hidden>{dark ? '🪵' : '🌸'}</span>
-              </span>
-            </button>
-            <span className={styles.modeLabel} aria-hidden>{dark ? 'Masculine' : 'Feminine'}</span>
-          </div>
+  <div className={styles.toggleWrapper}>
+    <button
+      className={styles.themeToggle}
+      onClick={() => {
+  setDark(d => {
+    const next = !d
+    triggerModeAura(next)
+    return next
+  })
+}}
+      aria-pressed={dark}
+      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={dark ? 'Light mode' : 'Dark mode'}
+    >
+      <span className={styles.toggleTrack}>
+        <span className={styles.toggleKnob}>
+          {dark ? '🪵' : '🌸'}
+        </span>
+      </span>
+    </button>
+
+    <div ref={effectRef} className={styles.effectContainer}></div>
+  </div>
+
+  <span className={styles.modeLabel} aria-hidden>
+    {dark ? 'Masculine' : 'Feminine'}
+  </span>
+</div>
         </div>
 
         <div className={styles.hero}>
-          <p className={styles.lead}>A short assessment to help identify potential relationship red flags. This is not a diagnosis—just a quick checklist to raise awareness.</p>
-          <p className={styles.supportText}>You deserve clarity and emotional safety in every relationship.</p>
-          <a href="#questionnaire" onClick={handleStart} className={styles.startBtn}>Start Assessment</a>
-        </div>
+          <p className={styles.brandTag}>RedAlert</p>
+
+<h1 className={styles.heroTitle}>
+  Are You Missing <span>Red Flags</span>?
+</h1>
+
+<p className={styles.heroSub}>
+  A 2-minute private relationship check. No judgment. No data stored.
+</p>
+
+<button onClick={handleStart} className={styles.startBtn}>
+  Start My Check
+</button> </div>
 
         <div className={styles.reassurance} aria-hidden>
           <span className={styles.badge}>
@@ -140,54 +236,88 @@ export default function RedAlertPage() {
       </header>
 
       <main className={styles.container}>
-        {showQuestions && (
-          <section id="questionnaire" ref={sectionRef} className={styles.questionnaire}>
-            <h2>Relationship Red Flags — Quick Assessment</h2>
-            <p className={styles.intro}>For each statement below, choose the option that best matches your experience.</p>
+  {showQuestions && (
+    <section
+      id="questionnaire"
+      ref={sectionRef}
+      className={styles.questionnaire}
+    >
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className={styles.form}
+      >
+        <fieldset className={styles.question}>
+  
+  <div className={styles.questionHeader}>
+    <span className={styles.questionNumber}>
+      Question {qIndex} of {questions.length}
+    </span>
 
-            <form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
-              <div className={styles.questions}>
-                {questions.slice(step * 6, step * 6 + 6).map((q, idx) => {
-                  const qIndex = step * 6 + idx + 1
-                  return (
-                    <fieldset className={styles.question} key={qIndex} style={{ ['--i' as any]: idx }}>
-                      <legend>{qIndex}. {q}</legend>
-                      <div>
-                        {options.map(opt => (
-                          <label key={opt.value}>
-                            <input
-                              type="radio"
-                              name={`q${qIndex}`}
-                              value={opt.value}
-                              checked={answers[qIndex] === opt.value}
-                              onChange={() => handleAnswer(qIndex, opt.value)}
-                            /> {opt.label}
-                          </label>
-                        ))}
-                      </div>
-                    </fieldset>
-                  )
-                })}
-              </div>
+    <h3 className={styles.questionText}>
+      {q}
+    </h3>
+  </div>
 
-              <div className={styles.actions}>
-                <div className={styles.pager}>
-                  {step > 0 && <button type="button" className={styles.prevBtn} onClick={prevPage}>Previous</button>}
-                  {step < 1 ? (
-                    <button type="button" className={styles.nextBtn} onClick={nextPage}>Next</button>
-                  ) : (
-                    <button type="submit" className={styles.submit}>Submit Assessment</button>
-                  )}
-                </div>
-              </div>
-            </form>
-          </section>
-        )}
-      </main>
+  <div className={styles.options}>
+    {options.map(opt => (
+      <label key={opt.value} className={styles.optionItem}>
+        <input
+          type="radio"
+          name={`q${qIndex}`}
+          value={opt.value}
+          checked={answers[qIndex] === opt.value}
+          onChange={() => handleAnswer(qIndex, opt.value)}
+        />
+        <span>{opt.label}</span>
+      </label>
+    ))}
+  </div>
 
-      <footer className={styles.footer}>
-        <small>RedAlert — awareness tool. If you are in immediate danger, contact local emergency services.</small>
-      </footer>
-    </div>
+  <div className={styles.cardActions}>
+    {currentIndex > 0 && (
+      <button
+        type="button"
+        className={styles.backBtn}
+        onClick={() => setCurrentIndex(i => i - 1)}
+      >
+        Back
+      </button>
+    )}
+
+    {currentIndex < questions.length - 1 ? (
+      <button
+        type="button"
+        className={styles.nextBtn}
+        onClick={() => setCurrentIndex(i => i + 1)}
+        disabled={!answers[qIndex]}
+      >
+        Next
+      </button>
+    ) : (
+      <button
+        type="submit"
+        className={styles.nextBtn}
+        disabled={!answers[qIndex]}
+      >
+        Submit
+      </button>
+    )}
+  </div>
+
+</fieldset>
+      </form>
+    </section>
+  )}
+</main>
+
+<footer className={styles.footer}>
+  <small>
+    RedAlert — awareness tool. If you are in
+    immediate danger, contact local emergency services.
+  </small>
+</footer>
+
+         </div>
   )
 }
